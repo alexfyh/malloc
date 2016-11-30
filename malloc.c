@@ -90,15 +90,16 @@ void free (void * block)
 	current_mab = (struct mab *)block - 1;
 	previous_mab = current_mab->prev;
 	next_mab = current_mab->next;
+	printf("%d\n",current_mab->size );
 	current_mab->allocated = 0;
-	if(next_mab!=NULL && next_mab->allocated==0)
+	if(!(next_mab==NULL) && (next_mab->allocated==0))
 	{
 		printf("%d\n",next_mab->size );
 		current_mab->size = current_mab->size + mab_size + next_mab->size; 
 		current_mab->next = next_mab->next;
 		printf("%s\n", "NEXT");
 	}
-	if(previous_mab!=NULL && previous_mab->allocated==0)
+	if(!(previous_mab==NULL) && (previous_mab->allocated==0))
 	{
 		printf("%d\n",previous_mab->size );
 		previous_mab->size = previous_mab->size + mab_size + current_mab->size;
@@ -128,7 +129,8 @@ int main(int argc, char const *argv[])
 
 	free((void *)ptr3);
 	free((void *)ptr2);
-	printf("%d\n", ((struct mab *)ptr1 - 1)->size);
+
+	printf("%d\n", ((struct mab *)ptr2 - 1)->size);
 	 //printf("%d\n", sizeof(head));
 	 //printf("%p\n", a);
 	 //first_fit(head,20);
