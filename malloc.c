@@ -48,6 +48,20 @@ void * malloc ( size_t size)
 	if(header)
 	{
 		header->allocated = 1;
+		if(header->size-size>mab_size)
+		{
+			header->size = size;
+			int newSize = header->size-size-mab_size;
+			int * init_position = (int *) header;
+			int position_offset = mab_size/sizeof(int);
+			struct mab * newHeader =(struct mab *) (init_position + position_offset + size);
+			newHeader->size = newSize;
+			newHeader->allocated = 0;
+			newHeader->next = header->next;
+			newHeader->prev = header;
+			header->next = newHeader;
+
+		}
 		return (void *) (header+1);
 	}
 	block = sbrk(total_size);
@@ -82,7 +96,6 @@ void * malloc ( size_t size)
 
 void free (void * block)
 {
-	printf("%s\n", "Entro al free");
 	struct mab * current_mab, * previous_mab, * next_mab;
 
 	if (!block)
@@ -108,33 +121,43 @@ void free (void * block)
 		next_mab->prev = previous_mab;
 		printf("%s\n", "PREV" );
 	}
+	//delete 
 	return;
 }
 
+void show()
+{
+	struct mab * puntero = head;
+	printf("%s\n","--------------");
+	int indice = 1;
+	while(puntero!=tail)
+	{
+		printf("%s%d   %d\n ","MEM block ", indice, puntero->size );
+		puntero = puntero->next;
+		indice++;
+	}
+	printf("%s\n","--------------" );
 
+}
 int main(int argc, char const *argv[])
 {
-	int * ptr1;
-	ptr1 = (int *)malloc(5);
-	*ptr1 = 32 ;
-	int * ptr2;
-	ptr2 = (int *)malloc(10);
-	*ptr2 = 1024;
-	int * ptr3;
-	ptr3 = (int *) malloc(8);
-	*ptr3 = 256;
-	int * ptr4;
-	ptr4 = (int *)malloc(2);
-	*ptr1 = 4 ;
-	printf("%s\n","Funcion Free" );
 
-	free((void *)ptr3);
-	free((void *)ptr2);
-	free((void *)ptr4);
-	printf("%d\n", ((struct mab *)ptr2 - 1)->size);
-	 //printf("%d\n", sizeof(head));
-	 //printf("%p\n", a);
-	 //first_fit(head,20);
+	int * ptr1;
+	ptr1 = (int *)malloc(8);
+	int * ptr2;
+	ptr2 = (int *)malloc(12);
+	int * ptr3;
+	ptr3 = (int *) malloc(4);
+	int * ptr4;
+	ptr4 = (int *)malloc(64);
+	int * ptr5;
+	ptr5 = (int *)malloc(56);
+
+	show();
+
+
+	
+	
 }
 
 
