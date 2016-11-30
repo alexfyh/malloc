@@ -35,7 +35,7 @@ void * first_fit(size_t size)
 	
 }
 
-void * custom_malloc ( size_t size)
+void * malloc ( size_t size)
 {
 	size_t total_size = mab_size + size;
 	void * block;
@@ -113,16 +113,16 @@ void free (void * block)
 int main(int argc, char const *argv[])
 {
 	int * ptr1;
-	ptr1 = (int *)custom_malloc(1);
+	ptr1 = (int *)malloc(1);
 	*ptr1 = 150;
 	printf("%d\n", *ptr1);
 	char * ptr2;
-	ptr2 = (char *)custom_malloc(2);
+	ptr2 = (char *)malloc(2);
 	*ptr2 = 'f';
 	*(ptr2+1)='a';
 	printf("%c %c\n", *ptr2, *(ptr2+1));
 	int * ptr3;
-	ptr3 = (int *) custom_malloc(20);
+	ptr3 = (int *) malloc(20);
 	*ptr3 = 1024;
 	printf("%d\n",*ptr3 );
 	printf("%s\n","Funcion Free" );
@@ -135,9 +135,6 @@ int main(int argc, char const *argv[])
 	 //printf("%p\n", a);
 	 //first_fit(head,20);
 }
-
-
-
 
 
 
