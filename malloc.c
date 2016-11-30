@@ -97,6 +97,7 @@ void free (void * block)
 		printf("%d\n",next_mab->size );
 		current_mab->size = current_mab->size + mab_size + next_mab->size; 
 		current_mab->next = next_mab->next;
+		next_mab->next->prev = current_mab;
 		printf("%s\n", "NEXT");
 	}
 	if(!(previous_mab==NULL) && (previous_mab->allocated==0))
@@ -104,6 +105,7 @@ void free (void * block)
 		printf("%d\n",previous_mab->size );
 		previous_mab->size = previous_mab->size + mab_size + current_mab->size;
 		previous_mab->next = current_mab->next;
+		next_mab->prev = previous_mab;
 		printf("%s\n", "PREV" );
 	}
 	return;
@@ -113,23 +115,22 @@ void free (void * block)
 int main(int argc, char const *argv[])
 {
 	int * ptr1;
-	ptr1 = (int *)malloc(1);
-	*ptr1 = 150;
-	printf("%d\n", *ptr1);
-	char * ptr2;
-	ptr2 = (char *)malloc(2);
-	*ptr2 = 'f';
-	*(ptr2+1)='a';
-	printf("%c %c\n", *ptr2, *(ptr2+1));
+	ptr1 = (int *)malloc(5);
+	*ptr1 = 32 ;
+	int * ptr2;
+	ptr2 = (int *)malloc(10);
+	*ptr2 = 1024;
 	int * ptr3;
-	ptr3 = (int *) malloc(20);
-	*ptr3 = 1024;
-	printf("%d\n",*ptr3 );
+	ptr3 = (int *) malloc(8);
+	*ptr3 = 256;
+	int * ptr4;
+	ptr4 = (int *)malloc(2);
+	*ptr1 = 4 ;
 	printf("%s\n","Funcion Free" );
 
 	free((void *)ptr3);
 	free((void *)ptr2);
-
+	free((void *)ptr4);
 	printf("%d\n", ((struct mab *)ptr2 - 1)->size);
 	 //printf("%d\n", sizeof(head));
 	 //printf("%p\n", a);
