@@ -184,6 +184,12 @@ int main(int argc, char const *argv[])
 	
 	void * ptr8 = malloc(50);
 	show();
+	free(ptr4);
+	free(ptr6);
+	show();
+
+	void * ptr9 = malloc(400);
+	show();
 	
 	//free(ptr3);
 	/*
