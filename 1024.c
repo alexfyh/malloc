@@ -30,8 +30,26 @@ struct mab * first_fit(size_t size)
 	}
 	return NULL;
 	
+}
 
-	
+
+void split_block(struct mab * header, size_t size)
+{
+			int newSize = (header->size-size)-mab_size;
+			char * init_position = (char *) header;
+			int position_offset = mab_size/sizeof(char);
+			struct mab * newHeader = (struct mab * ) (init_position + position_offset + size);
+			//int * final_position = init_position + position_offset + size;
+			//struct mab * newHeader =(struct mab *) (init_position + position_offset + size);
+			newHeader->size = newSize;
+			newHeader->allocated = 0;
+			newHeader->next = header->next;
+			newHeader->prev = header;
+			//header = 
+			header->next = newHeader;
+			header->size = size;
+			return;
+
 }
 
 void * malloc ( size_t size)
@@ -47,20 +65,11 @@ void * malloc ( size_t size)
 	if(header)
 	{
 		header->allocated = 1;
-		/*if(header->size-size>mab_size)
+		if(header->size-size>mab_size+4)
 		{
-			header->size = size;
-			int newSize = header->size-size-mab_size;
-			int * init_position = (int *) header;
-			int position_offset = mab_size/sizeof(int);
-			struct mab * newHeader =(struct mab *) (init_position + position_offset + size);
-			newHeader->size = newSize;
-			newHeader->allocated = 0;
-			newHeader->next = header->next;
-			newHeader->prev = header;
-			header->next = newHeader;
-
-		}*/
+			split_block(header,size);
+		
+		}
 		return (void *) (header+1);
 	}
 	block = sbrk(total_size);
@@ -70,7 +79,7 @@ void * malloc ( size_t size)
 		return NULL;
 	}
 	
-	header = block;
+	header = (struct mab *)block;
 	header->size = size;
 	//printf("%s %d\n","Agregando" , size );
 	header->allocated = 1;
@@ -87,9 +96,8 @@ void * malloc ( size_t size)
 		tail->next = header;
 		header->prev = tail;
 		header->next = NULL;
-		
-
 	}
+
 	
 	
 	tail = header;
@@ -151,6 +159,7 @@ void show()
 		indice++;
 	}
 	printf("%s\n","================================================" );
+	//printf("%p\n", tail->next);
 	
 	return;
 
@@ -164,36 +173,29 @@ int main(int argc, char const *argv[])
 	void * ptr4 = malloc(256);
 	void * ptr5 = malloc(16);
 	void * ptr6 = malloc(512);
-	show();
-	free(ptr1);
-	show();
-	free(ptr2);
-	show();
-	free(ptr3);
-	free(ptr4);
-	free(ptr5);
-	show();
-	//free(ptr3);
-	malloc(100);
-	malloc(100);
-
-	show();
-	/*ptr5 = (int *)malloc(56);
-	int * ptr6;
-	ptr6 = (int *)malloc(16);
-	int * ptr7;
-	ptr7 = (int *)malloc(256);
-
-	int * ptr8;
-	ptr8 = (int *)malloc(169);
-	malloc(200);
-	malloc(360);
+	void * ptr7 = malloc(2048);
 	
 	show();
-	//malloc(100);
-	//show();
 
-*/
+	free(ptr1);
+	free(ptr2);
+	
+	show();
+	
+	void * ptr8 = malloc(50);
+	show();
+	
+	//free(ptr3);
+	/*
+	free(ptr7);
+	show();
+
+	void * ptr9 = malloc(2000);
+	show();
+
+	void * ptr10 = malloc(3000);
+	show();
+	*/
 	
 	
 }
